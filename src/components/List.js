@@ -40,7 +40,6 @@ function List() {
 
   return (
     <>
-      <p>{process.env.REACT_APP_SECRET_NAME}</p>
       <div className="d-flex justify-content-end">
         <form action="">
           <div className="mb-6">
