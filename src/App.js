@@ -1,8 +1,6 @@
-import Create from "./components/Create";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import List from "./components/List";
+import { RouterProvider } from "react-router-dom";
 import NotFound from "./components/NotFound";
-import Edit from "./components/Edit";
+import { router } from "./Router/routes";
 
 function App() {
   return (
@@ -13,14 +11,7 @@ function App() {
             <span className="navbar-brand mb-0 h1">React CRUD</span>
           </div>
         </nav>
-        <BrowserRouter>
-          <Routes>
-            <Route exact path="/" element={<List />}></Route>
-            <Route exact path="/create" element={<Create />}></Route>
-            <Route exact path="/edit/:id" element={<Edit />}></Route>
-            <Route exact path="*" element={<NotFound />}></Route>
-          </Routes>
-        </BrowserRouter>
+        <RouterProvider router={router} fallbackElement={<NotFound />} />
       </div>
     </div>
   );

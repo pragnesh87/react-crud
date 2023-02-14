@@ -1,22 +1,15 @@
-import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import React from "react";
+import { Link, useLoaderData, useSubmit } from "react-router-dom";
 import { confirmAlert } from "react-confirm-alert"; // Import
 import "react-confirm-alert/src/react-confirm-alert.css"; // Import css
-import { deleteUser, getUsers } from "../Utils/ApiService";
+import Pagination from "./Pagination";
 
 function List() {
-  const [userData, setUserData] = useState([]);
-  const [pages, setPages] = useState([]);
+  const loadedData = useLoaderData();
+  const submit = useSubmit();
 
-  const listUsers = (resp) => {
-    setUserData(resp.data.data);
-    setPages(resp.data.meta.links);
-  };
-
-  useEffect(() => {
-    console.log("in use effect");
-    getUsers(listUsers);
-  }, []);
+  const userData = loadedData.data;
+  const pageMeta = loadedData.meta;
 
   const handleDelete = (id) => {
     confirmAlert({
@@ -26,8 +19,9 @@ function List() {
         {
           label: "Yes",
           onClick: () =>
-            deleteUser(id, () => {
-              getUsers(listUsers);
+            submit(null, {
+              method: "delete",
+              action: `/delete/${id}`,
             }),
         },
         {
@@ -78,11 +72,10 @@ function List() {
                       role="group"
                       aria-label="Basic example"
                     >
-                      <button type="button" className="btn btn-primary">
-                        <Link to={`/edit/${user.id}`}>
-                          <i className="bi bi-pencil-square"></i>
-                        </Link>
-                      </button>
+                      <Link to={`/edit/${user.id}`} className="btn btn-primary">
+                        <i className="bi bi-pencil-square"></i>
+                      </Link>
+
                       <button
                         type="button"
                         className="btn btn-danger"
@@ -99,13 +92,7 @@ function List() {
         </tbody>
       </table>
 
-      <div className="btn-group" role="group" aria-label="Basic example">
-        {pages.map((page) => (
-          <button type="button" className={`btn btn-primary ${page.active}`}>
-            {page.label}
-          </button>
-        ))}
-      </div>
+      <Pagination last={pageMeta.last_page} current={pageMeta.current_page} />
     </>
   );
 }

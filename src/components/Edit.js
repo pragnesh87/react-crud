@@ -1,37 +1,30 @@
 import React, { useEffect, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
-import { getUser, updateUser } from "../Utils/ApiService";
+import { Form, Link, useLoaderData, useParams } from "react-router-dom";
+import { getUser } from "../Utils/ApiService";
 
 function Edit(props) {
+  const loadData = useLoaderData();
+
   const [form, setForm] = useState({
     name: "",
     email: "",
     password: "",
   });
-  const history = useNavigate();
+
   const params = useParams();
   const id = params.id;
 
   useEffect(() => {
-    getUser(id, (resp) => {
-      setForm({
-        name: resp.data.data.name,
-        email: resp.data.data.email,
-        password: "",
-      });
+    setForm({
+      name: loadData.data.name,
+      email: loadData.data.email,
+      password: "",
     });
   }, []);
 
-  const handleUpdate = (e) => {
-    e.preventDefault();
-    updateUser(id, form, (resp) => {
-      history("/");
-    });
-  };
-
   return (
     <>
-      <form>
+      <Form method="post" action={`/update/${id}`}>
         <div className="mb-3">
           <label htmlFor="" className="form-label">
             Name
@@ -39,15 +32,9 @@ function Edit(props) {
           <input
             type="text"
             className="form-control"
-            aria-describedby="helpId"
             placeholder="Name"
-            onChange={(e) =>
-              setForm({
-                ...form,
-                name: e.target.value,
-              })
-            }
-            value={form.name}
+            name="name"
+            defaultValue={form.name}
           />
         </div>
         <div className="mb-3">
@@ -59,13 +46,8 @@ function Edit(props) {
             className="form-control"
             id="user-email"
             placeholder="Email"
-            onChange={(e) =>
-              setForm({
-                ...form,
-                email: e.target.value,
-              })
-            }
-            value={form.email}
+            name="email"
+            defaultValue={form.email}
           />
         </div>
         <div className="mb-3">
@@ -77,27 +59,18 @@ function Edit(props) {
             className="form-control"
             id="exampleInputPassword1"
             placeholder="Password"
-            onChange={(e) =>
-              setForm({
-                ...form,
-                password: e.target.value,
-              })
-            }
-            value=""
+            name="password"
+            defaultValue=""
           />
         </div>
 
-        <button
-          type="submit"
-          className="btn btn-primary"
-          onClick={handleUpdate}
-        >
+        <button type="submit" className="btn btn-primary">
           Update
         </button>
         <Link to="/" className="btn btn-secondary ms-1">
           Back
         </Link>
-      </form>
+      </Form>
     </>
   );
 }

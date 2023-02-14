@@ -1,25 +1,12 @@
-import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import React from "react";
+import { Form, Link, redirect, useNavigation } from "react-router-dom";
 import { saveUser } from "../Utils/ApiService";
 
 function Create() {
-  const history = useNavigate();
-  const [form, setForm] = useState({
-    name: "",
-    email: "",
-    password: "",
-  });
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    saveUser(form, () => {
-      history("/");
-    });
-  };
-
+  const navigation = useNavigation();
   return (
     <>
-      <form>
+      <Form method="post" action="/create">
         <div className="mb-3">
           <label htmlFor="" className="form-label">
             Name
@@ -29,12 +16,7 @@ function Create() {
             className="form-control"
             aria-describedby="helpId"
             placeholder="Name"
-            onChange={(e) =>
-              setForm({
-                ...form,
-                name: e.target.value,
-              })
-            }
+            name="name"
           />
         </div>
         <div className="mb-3">
@@ -46,12 +28,7 @@ function Create() {
             className="form-control"
             id="user-email"
             placeholder="Email"
-            onChange={(e) =>
-              setForm({
-                ...form,
-                email: e.target.value,
-              })
-            }
+            name="email"
           />
         </div>
         <div className="mb-3">
@@ -63,26 +40,21 @@ function Create() {
             className="form-control"
             id="exampleInputPassword1"
             placeholder="Password"
-            onChange={(e) =>
-              setForm({
-                ...form,
-                password: e.target.value,
-              })
-            }
+            name="password"
           />
         </div>
 
         <button
           type="submit"
           className="btn btn-primary"
-          onClick={handleSubmit}
+          disabled={navigation.state === "submitting"}
         >
           Submit
         </button>
         <Link to="/" className="btn btn-secondary ms-1">
           Back
         </Link>
-      </form>
+      </Form>
     </>
   );
 }
