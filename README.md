@@ -2,5 +2,8 @@
 
 Simple React CRUD Application with pagination and react router actions and loader
 
-create .env file in project root
-add API_BASE_URL
+- clone repo
+- create .env file from .env.example in project root
+  add API_BASE_URL
+- npm install
+- npm serve
